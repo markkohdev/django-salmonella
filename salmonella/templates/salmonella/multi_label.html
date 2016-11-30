@@ -1,4 +1,8 @@
-{% for object in objects %}
-    <a href="{{ object.1 }}" title="{{ object.0 }}">[{{ object.0.pk }}] {{ object.0|truncatechars:30 }}</a>{% if not forloop.last %},&nbsp;{% endif %}
-{% endfor %}
-
+<ul>
+  {% for object in objects %}
+  <li>
+    <a href="{{ object.1 }}" title="{{ object.0 }}">[{{ object.0.pk }}] {{ object.0|truncatechars:60 }}</a>
+  </li>
+  {% endfor %}
+</ul>
+<a class="salmonella-refresh"><span class="icon-refresh"></span></a>
