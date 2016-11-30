@@ -13,10 +13,10 @@ function dismissRelatedLookupPopup(win, chosenId) {
     win.close();
 }
 
-(function($) {
-    $(document).ready(function($) {
+(function ($) {
+    $(document).ready(function ($) {
 
-        function update_salmonella_label(element, multi){
+        function update_salmonella_label(element, multi) {
             var name = element.next("a").attr("data-name"),
                 app = element.next("a").attr("data-app"),
                 model = element.next("a").attr("data-model"),
@@ -36,51 +36,55 @@ function dismissRelatedLookupPopup(win, chosenId) {
                     (url !== undefined) &&
                     (value !== undefined) && (value !== "")) {
                     // Handles elements added via the TabularInline add row functionality
-                    if (name.search(/__prefix__/) != -1){
+                    if (name.search(/__prefix__/) != -1) {
                         name = element.attr("id").replace("id_", "");
                     }
 
                     $.ajax({
                         url: url,
                         data: {"id": value},
-                        success: function(data){
+                        success: function (data) {
                             $("#" + name + "_salmonella_label").html(" " + data);
                         }
                     });
+                }
+                // If the list was cleared, remove the salmonella text
+                else if (value == "") {
+                    $("#" + name + "_salmonella_label").html("");
                 }
             } catch (e) {
                 console.log("Oups, we have a problem" + e);
             }
         }
 
-        $(".vForeignKeyRawIdAdminField").change(function(e){
+        $(".vForeignKeyRawIdAdminField").change(function (e) {
             var $this = $(this);
-            update_salmonella_label($this, mutli=false);
+            update_salmonella_label($this, mutli = false);
             e.stopPropagation();
         });
 
         // Handle ManyToManyRawIdAdminFields.
-        $(".vManyToManyRawIdAdminField").change(function(e){
+        $(".vManyToManyRawIdAdminField").change(function (e) {
             var $this = $(this);
-            update_salmonella_label($this, multi=true);
+            update_salmonella_label($this, multi = true);
             e.stopPropagation();
         });
 
         // Clear both the input field and the labels
-        $(".salmonella-clear-field").click(function(e){
+        $(".salmonella-clear-field").click(function (e) {
             var $this = $(this);
             $this.parent().find('.vForeignKeyRawIdAdminField, .vManyToManyRawIdAdminField').val("");
             $this.parent().find(".salmonella_label").empty();
         });
 
         // Since jet overrides dismissRelatedLookupPopup we need a way to manually refresh the salmonella list
-        $('body').on('click', '.salmonella-refresh', function(e){
+        $('body').on('click', '.salmonella-refresh', function (e) {
             var $this = $(this);
             $this.parent().parent().find('.vForeignKeyRawIdAdminField, .vManyToManyRawIdAdminField').trigger('change');
         });
 
         // Open up the pop up window and set the focus in the input field
-        $('body').on('click', ".salmonella-related-lookup", function(e){
+        $('body').on('click', ".salmonella-related-lookup", function (e) {
             // Actual Django javascript function
             showRelatedObjectLookupPopup(this);
 
