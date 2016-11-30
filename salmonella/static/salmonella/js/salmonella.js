@@ -73,8 +73,14 @@ function dismissRelatedLookupPopup(win, chosenId) {
             $this.parent().find(".salmonella_label").empty();
         });
 
+        // Since jet overrides dismissRelatedLookupPopup we need a way to manually refresh the salmonella list
+        $('body').on('click', '.salmonella-refresh', function(e){
+            var $this = $(this);
+            $this.parent().parent().find('.vForeignKeyRawIdAdminField, .vManyToManyRawIdAdminField').trigger('change');
+        });
+
         // Open up the pop up window and set the focus in the input field
-        $(".salmonella-related-lookup").click(function(e){
+        $('body').on('click', ".salmonella-related-lookup", function(e){
             // Actual Django javascript function
             showRelatedObjectLookupPopup(this);
 
